@@ -1,5 +1,11 @@
 # @twin-digital/projen
 
+## 0.1.0
+
+### Minor Changes
+
+- 8da816f: Add monorepo support.
+
 ## 0.0.2
 
 ### Patch Changes
