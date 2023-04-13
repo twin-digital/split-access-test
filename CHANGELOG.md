@@ -1,5 +1,11 @@
 # @twin-digital/projen
 
+## 0.1.1
+
+### Patch Changes
+
+- 6e91513: Update dependencies.
+
 ## 0.1.0
 
 ### Minor Changes
