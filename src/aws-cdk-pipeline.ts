@@ -72,16 +72,17 @@ export class AwsCdkPipeline extends FileBase {
     this.nodeVersion = nodeVersion
     this.typescriptProject = project
     this.workflowName = workflowName
-    this.workflowPath = `.github/workflows/${workflowFileName}`
+    this.workflowPath =
+      project.parent !== undefined
+        ? path.join(path.relative(project.outdir, project.parent.outdir), `.github/workflows/${workflowFileName}`)
+        : `.github/workflows/${workflowFileName}`
   }
 
   protected synthesizeContent(): string | undefined {
     const preSteps = [] as string[]
 
     const resolvedNodeVersion =
-      this.nodeVersion ??
-      this.typescriptProject.maxNodeVersion ??
-      this.typescriptProject.minNodeVersion
+      this.nodeVersion ?? this.typescriptProject.maxNodeVersion ?? this.typescriptProject.minNodeVersion
     if (resolvedNodeVersion) {
       preSteps.push(`{
           name: 'Setup Node.js',
@@ -105,9 +106,7 @@ export class AwsCdkPipeline extends FileBase {
         },`)
     }
 
-    return `${
-      this.marker ? '//' + this.marker + '\n\n' : ''
-    }import { ShellStep } from 'aws-cdk-lib/pipelines'
+    return `${this.marker ? '//' + this.marker + '\n\n' : ''}import { ShellStep } from 'aws-cdk-lib/pipelines'
 import { AwsCredentials, GitHubWorkflow } from 'cdk-pipelines-github'
 import { Construct } from 'constructs'
 

@@ -2,9 +2,15 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { awscdk, Component, javascript } from 'projen'
 import { AwsCdkTypeScriptApp } from 'projen/lib/awscdk'
-import { ScopedPackagesOptions } from 'projen/lib/javascript'
 
 import { AwsCdkPipeline } from './aws-cdk-pipeline'
+import {
+  DefaultCompilerOptions,
+  DefaultPrettierOptions,
+  DEFAULTS,
+} from './constants'
+import { addReferences, updateTypescriptConfig } from './monorepo'
+import { TwinDigitalTypeScriptOptions } from './typescript-options'
 
 export type TwinDigitalCdkAppOptions = Omit<
   awscdk.AwsCdkTypeScriptAppOptions,
@@ -14,66 +20,38 @@ export type TwinDigitalCdkAppOptions = Omit<
   | 'projenrcTs'
   | 'release'
   | 'scopedPackagesOptions'
-> & {
-  additionalScopedPackages?: ScopedPackagesOptions[]
-  cdkVersion?: string
-  defaultReleaseBranch?: string
-}
-
-const DEFAULTS = {
-  AUTHOR_EMAIL: 'sean@twindigital.io',
-  AUTHOR_NAME: 'Sean Kleinjung',
-  CDK_VERSION: '2.64.0',
-  CONSTRUCTS_VERSION: '10.1.249',
-  MIN_NODE_VERSION: '16.13.0',
-  PRETTIER_OPTIONS: {
-    settings: {
-      printWidth: 120,
-      semi: false,
-      singleQuote: true,
-    },
-  },
-}
+> &
+  TwinDigitalTypeScriptOptions & {
+    cdkVersion?: string
+  }
 
 export class TwinDigitalCdkApp extends awscdk.AwsCdkTypeScriptApp {
   constructor({
     additionalScopedPackages = [],
-    authorEmail = DEFAULTS.AUTHOR_EMAIL,
-    authorName = DEFAULTS.AUTHOR_NAME,
-    cdkVersion = DEFAULTS.CDK_VERSION,
     codeArtifactOptions,
-    constructsVersion = DEFAULTS.CONSTRUCTS_VERSION,
-    defaultReleaseBranch = 'main',
     githubOptions,
-    licensed = false,
-    minNodeVersion = DEFAULTS.MIN_NODE_VERSION,
-    packageManager = javascript.NodePackageManager.NPM,
     packageName,
-    prettier = true,
-    prettierOptions = DEFAULTS.PRETTIER_OPTIONS,
+    references = [],
     ...props
   }: TwinDigitalCdkAppOptions) {
     super({
-      authorEmail,
-      authorName,
-      cdkVersion,
+      ...DEFAULTS,
       codeArtifactOptions,
-      constructsVersion,
-      defaultReleaseBranch,
       githubOptions: {
         mergify: false,
         ...(githubOptions ?? {}),
       },
-      licensed,
-      minNodeVersion,
-      packageManager,
+      gitignore: [...(props.gitignore ?? []), '.env'],
       packageName: packageName ?? `@twin-digital/${props.name}`,
-      prettier,
-      prettierOptions,
+      prettierOptions: {
+        ...DefaultPrettierOptions,
+        ...(props.prettierOptions ?? {}),
+      },
+      // we have no projenrc files in monorepo subprojects, so avoid adding the config
+      projenrcTs: props.parent !== undefined ? false : true,
       ...props,
       deps: [...(props.deps ?? []), 'cdk-pipelines-github'],
       mutableBuild: false,
-      projenrcTs: true,
       release: true,
       sampleCode: false,
       scopedPackagesOptions: [
@@ -85,11 +63,16 @@ export class TwinDigitalCdkApp extends awscdk.AwsCdkTypeScriptApp {
         },
       ],
       tsconfig: {
+        ...(props.tsconfig ?? {}),
         compilerOptions: {
-          noUnusedLocals: false,
+          ...DefaultCompilerOptions,
+          ...(props.tsconfig?.compilerOptions ?? {}),
         },
       },
     })
+
+    updateTypescriptConfig(this)
+    addReferences(this, references)
 
     new AwsCdkPipeline(this, {
       codeArtifactRole: codeArtifactOptions?.roleToAssume,
