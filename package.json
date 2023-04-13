@@ -6,7 +6,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "lodash": "^4.17.21",
-    "projen": "^0.67.50"
+    "projen": "^0.71.7"
   },
   "devDependencies": {
     "@types/jest": "29.x",
