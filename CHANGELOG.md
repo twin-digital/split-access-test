@@ -1,5 +1,11 @@
 # @twin-digital/projen
 
+## 0.1.2
+
+### Patch Changes
+
+- 88d0887: Fix reference path mappings so they can be used by ts-node.
+
 ## 0.1.1
 
 ### Patch Changes
