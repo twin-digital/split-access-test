@@ -2,7 +2,11 @@ import path from 'node:path'
 import { get, isEmpty } from 'lodash'
 import { TypeScriptProject } from 'projen/lib/typescript'
 
-const tsconfigOverride = (project: TypeScriptProject, key: string, value: any) => {
+const tsconfigOverride = (
+  project: TypeScriptProject,
+  key: string,
+  value: any
+) => {
   project.tsconfig?.file?.addOverride?.(key, value)
   project.tsconfigDev.file.addOverride(key, value)
 }
@@ -29,10 +33,15 @@ export const addBaseTsconfigExtends = (project: TypeScriptProject) => {
 /**
  * Adds tsconfig references (and corresponding paths) to a project.
  */
-export const addReferences = (project: TypeScriptProject, references: TypeScriptProject[]) => {
+export const addReferences = (
+  project: TypeScriptProject,
+  references: TypeScriptProject[]
+) => {
   // add project references as node dependencies and tsconfig references
   if (!isEmpty(references)) {
-    project.addDeps(...references.map((reference) => reference.package.packageName))
+    project.addDeps(
+      ...references.map((reference) => reference.package.packageName)
+    )
     tsconfigOverride(
       project,
       'references',
@@ -45,11 +54,21 @@ export const addReferences = (project: TypeScriptProject, references: TypeScript
     const tsconfigPathMappings = references.reduce(
       (result, reference) => ({
         ...result,
-        [reference.package.packageName]: [path.relative(project.outdir, reference.outdir)],
+        [reference.package.packageName]: [
+          `${path.join(
+            path.relative(project.outdir, reference.outdir),
+            reference.srcdir
+          )}`,
+        ],
       }),
       {} as Record<string, string[]>
     )
 
     tsconfigOverride(project, 'compilerOptions.paths', tsconfigPathMappings)
+
+    if (project.deps.all.find((dep) => dep.name === 'ts-node')) {
+      project.addDevDeps('tsconfig-paths')
+      tsconfigOverride(project, 'ts-node.require', ['tsconfig-paths/register'])
+    }
   }
 }
