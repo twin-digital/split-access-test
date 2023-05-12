@@ -1,5 +1,11 @@
 # @twin-digital/projen
 
+## 0.2.0
+
+### Minor Changes
+
+- c9facf0: Added TwinDigitalMonorepoProject to projen lib.
+
 ## 0.1.2
 
 ### Patch Changes
