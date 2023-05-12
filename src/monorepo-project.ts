@@ -1,10 +1,9 @@
 import path from 'node:path'
-
+import { NodePackage, NodeProject } from 'projen/lib/javascript'
 import {
   TwinDigitalTypescriptProject,
   TwinDigitalTypescriptProjectOptions,
-} from '@twin-digital/projen'
-import { NodePackage, NodeProject } from 'projen/lib/javascript'
+} from './typescript-project'
 
 type AccessiblePackage = Omit<
   NodePackage,
