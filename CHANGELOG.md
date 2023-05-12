@@ -1,5 +1,11 @@
 # @twin-digital/projen
 
+## 0.2.2
+
+### Patch Changes
+
+- 5be5ddd: Fixed error when creating TwinDigitalMonoRepoProjects.
+
 ## 0.2.1
 
 ### Patch Changes
