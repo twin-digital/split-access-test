@@ -1,5 +1,11 @@
 # @twin-digital/projen
 
+## 0.2.1
+
+### Patch Changes
+
+- a328ad9: Added missing exports for new types.
+
 ## 0.2.0
 
 ### Minor Changes
