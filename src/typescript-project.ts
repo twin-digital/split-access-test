@@ -1,4 +1,3 @@
-import { javascript } from 'projen'
 import {
   TypeScriptProject,
   TypeScriptProjectOptions,
