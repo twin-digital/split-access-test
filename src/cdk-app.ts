@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { awscdk, Component, javascript } from 'projen'
+import { awscdk, Component } from 'projen'
 import { AwsCdkTypeScriptApp } from 'projen/lib/awscdk'
 
 import { AwsCdkPipeline } from './aws-cdk-pipeline'
@@ -11,6 +11,7 @@ import {
 } from './constants'
 import { addReferences, updateTypescriptConfig } from './monorepo'
 import { TwinDigitalTypeScriptOptions } from './typescript-options'
+import { TypeScriptModuleResolution } from 'projen/lib/javascript'
 
 export type TwinDigitalCdkAppOptions = Omit<
   awscdk.AwsCdkTypeScriptAppOptions,
@@ -29,6 +30,7 @@ export class TwinDigitalCdkApp extends awscdk.AwsCdkTypeScriptApp {
   constructor({
     additionalScopedPackages = [],
     codeArtifactOptions,
+    esModule = true,
     githubOptions,
     packageName,
     references = [],
@@ -67,9 +69,29 @@ export class TwinDigitalCdkApp extends awscdk.AwsCdkTypeScriptApp {
         compilerOptions: {
           ...DefaultCompilerOptions,
           ...(props.tsconfig?.compilerOptions ?? {}),
+          module: esModule ? 'node16' : undefined,
+          moduleResolution: esModule
+            ? TypeScriptModuleResolution.NODE16
+            : TypeScriptModuleResolution.NODE,
         },
       },
     })
+
+    if (esModule) {
+      // set package type
+      this.package.addField('type', 'module')
+
+      const tsconfig = this.tsconfig?.fileName ?? this.tsconfigDev.fileName
+
+      // add "--esm" flag to cdk command
+      this.cdkConfig.json.addOverride(
+        'app',
+        `npx ts-node --esm -P ${tsconfig} --prefer-ts-exts ${path.posix.join(
+          this.srcdir,
+          this.appEntrypoint
+        )}`
+      )
+    }
 
     updateTypescriptConfig(this)
     addReferences(this, references)

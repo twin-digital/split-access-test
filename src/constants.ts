@@ -17,6 +17,7 @@ export const DefaultCompilerOptions = {
   noUnusedLocals: false,
   noUnusedParameters: false,
   skipLibCheck: true,
+  target: 'ES2021',
 }
 
 export const DefaultPrettierOptions = {

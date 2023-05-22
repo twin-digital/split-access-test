@@ -9,6 +9,7 @@ import {
 } from './constants'
 import { addReferences, updateTypescriptConfig } from './monorepo'
 import { TwinDigitalTypeScriptOptions } from './typescript-options'
+import { TypeScriptModuleResolution } from 'projen/lib/javascript'
 
 export type TwinDigitalTypescriptProjectOptions = Omit<
   TypeScriptProjectOptions,
@@ -23,6 +24,7 @@ export class TwinDigitalTypescriptProject extends TypeScriptProject {
   constructor({
     additionalScopedPackages = [],
     codeArtifactOptions,
+    esModule = true,
     githubOptions,
     packageName,
     references = [],
@@ -59,9 +61,17 @@ export class TwinDigitalTypescriptProject extends TypeScriptProject {
         compilerOptions: {
           ...DefaultCompilerOptions,
           ...(props.tsconfig?.compilerOptions ?? {}),
+          module: esModule ? 'node16' : undefined,
+          moduleResolution: esModule
+            ? TypeScriptModuleResolution.NODE16
+            : TypeScriptModuleResolution.NODE,
         },
       },
     })
+
+    if (esModule) {
+      this.package.addField('type', 'module')
+    }
 
     updateTypescriptConfig(this)
     addReferences(this, references)
