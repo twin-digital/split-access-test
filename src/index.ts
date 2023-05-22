@@ -1,6 +1,7 @@
 export * from './aws-cdk-pipeline'
 export * from './cdk-app'
 export * from './constants'
+export * from './load-projects'
 export * from './monorepo'
 export * from './monorepo-project'
 export * from './typescript-project'
