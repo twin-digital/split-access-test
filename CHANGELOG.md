@@ -1,5 +1,19 @@
 # @twin-digital/projen
 
+## 0.3.0
+
+### Minor Changes
+
+- 78cd212: Added ESM support, and enabled it by default.
+
+  BREAKING CHANGE: ES modules are not backwards-compatible, so non-esm projects will have to set "esModule: false" in their Typescript projects.
+
+- 43bdf79: Added "loadProjects" helper for creating monorepos.
+
+### Patch Changes
+
+- a59a96a: Use more aggressive strategy to prevent monorepo child packages from installing dependencies.
+
 ## 0.2.2
 
 ### Patch Changes
