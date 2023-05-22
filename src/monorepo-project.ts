@@ -1,9 +1,16 @@
 import path from 'node:path'
-import { NodePackage, NodeProject } from 'projen/lib/javascript'
 import {
   TwinDigitalTypescriptProject,
   TwinDigitalTypescriptProjectOptions,
-} from './typescript-project'
+} from '@twin-digital/projen'
+import { NodePackage, NodeProject } from 'projen/lib/javascript'
+
+function isTruthy(value: string | undefined): boolean {
+  return !(
+    value === undefined ||
+    ['null', 'undefined', '0', 'false', ''].includes(value.toLocaleLowerCase())
+  )
+}
 
 type AccessiblePackage = Omit<
   NodePackage,
@@ -17,7 +24,7 @@ type AccessiblePackage = Omit<
  * Helper to easily access the private methods 'installDependencies' and 'resolveDepsAndWritePackageJson'
  * on NodePackage.
  */
-const exposePrivates = (pkg: NodePackage): AccessiblePackage =>
+const exposePackagePrivates = (pkg: NodePackage): AccessiblePackage =>
   pkg as unknown as AccessiblePackage
 
 export class TwinDigitalMonorepoProject extends TwinDigitalTypescriptProject {
@@ -39,14 +46,6 @@ export class TwinDigitalMonorepoProject extends TwinDigitalTypescriptProject {
   public preSynthesize() {
     super.preSynthesize()
 
-    this.subprojects.forEach((project) => {
-      if (project instanceof NodeProject) {
-        // we do not want to install on subprojects, just the monorepo root
-        project.tasks.tryFind('install')?.reset()
-        project.tasks.tryFind('install:ci')?.reset()
-      }
-    })
-
     // configure eslint working directories, so vscode uses correct eslint config for each project
     this.vscode?.settings?.addSetting?.(
       'eslint.workingDirectories',
@@ -64,6 +63,22 @@ export class TwinDigitalMonorepoProject extends TwinDigitalTypescriptProject {
     )
   }
 
+  public synth(): void {
+    // prevent subprojects from running their post-synthesize steps (i.e. npm install)
+    // we do this for the root project in postSynthesize
+
+    const oldValue = process.env.PROJEN_DISABLE_POST
+    process.env.PROJEN_DISABLE_POST = 'true'
+
+    super.synth()
+
+    if (!isTruthy(oldValue)) {
+      this.postSynthesize()
+    }
+
+    process.env.PROJEN_DISABLE_POST = oldValue
+  }
+
   /**
    * This is a hack to prevent projen from running an "npm install" on each subproject. It also
    * tries to preserve the behavior of replacing dependencies with a '*' version with a semantically
@@ -73,7 +88,7 @@ export class TwinDigitalMonorepoProject extends TwinDigitalTypescriptProject {
   public postSynthesize(): void {
     super.postSynthesize()
 
-    const accessiblePackage = exposePrivates(this.package)
+    const accessiblePackage = exposePackagePrivates(this.package)
 
     const installNeeded = this.subprojects.some((project) => {
       return project instanceof NodeProject && project.package.file.changed
@@ -83,12 +98,15 @@ export class TwinDigitalMonorepoProject extends TwinDigitalTypescriptProject {
       accessiblePackage.installDependencies()
     }
 
-    const needsReinstall = this.subprojects.some((project) => {
-      return (
-        project instanceof NodeProject &&
-        exposePrivates(project.package).resolveDepsAndWritePackageJson()
+    const needsReinstall = this.subprojects
+      .map(
+        (project) =>
+          project instanceof NodeProject &&
+          exposePackagePrivates(
+            project.package
+          ).resolveDepsAndWritePackageJson()
       )
-    })
+      .some((p) => p)
 
     if (needsReinstall) {
       accessiblePackage.installDependencies()
