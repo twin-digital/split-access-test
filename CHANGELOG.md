@@ -1,5 +1,11 @@
 # @twin-digital/projen
 
+## 0.3.2
+
+### Patch Changes
+
+- 294cb7e: Added "esm: true" to tsconfig for ESM packages.
+
 ## 0.3.1
 
 ### Patch Changes
