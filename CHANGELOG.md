@@ -1,5 +1,11 @@
 # @twin-digital/projen
 
+## 0.4.1
+
+### Patch Changes
+
+- b8a48d1: Correctly build package with ESM output.
+
 ## 0.4.0
 
 ### Minor Changes
