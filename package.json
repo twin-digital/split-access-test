@@ -22,6 +22,7 @@
   "author": "Sean Kleinjung",
   "ace": {
     "build": {
+      "esm": true,
       "mode": "library"
     },
     "package": false
