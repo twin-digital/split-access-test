@@ -1,5 +1,11 @@
 # @twin-digital/projen
 
+## 0.4.2
+
+### Patch Changes
+
+- 774a94a: Fixed error preventing projen lib from being imported.
+
 ## 0.4.1
 
 ### Patch Changes
