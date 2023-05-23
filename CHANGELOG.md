@@ -1,5 +1,13 @@
 # @twin-digital/projen
 
+## 0.4.0
+
+### Minor Changes
+
+- 0370f8a: Converted projen lib to ESM.
+
+  BREAKING CHANGE: ES modules are not backwards-compatible, so non-esm projects will have to be converted or import this module using dynamic import() statements.
+
 ## 0.3.2
 
 ### Patch Changes
