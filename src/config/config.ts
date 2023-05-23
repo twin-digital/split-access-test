@@ -18,8 +18,8 @@ export const PackageModes = [
   'none',
 ] as const
 
-export type BuildMode = typeof BuildModes[number]
-export type PackageMode = typeof PackageModes[number]
+export type BuildMode = (typeof BuildModes)[number]
+export type PackageMode = (typeof PackageModes)[number]
 
 /**
  * Configuration controlling how source code is transformed, such as transpilation and bundling.
@@ -63,6 +63,10 @@ export type BuildConfigCdk = {
 }
 
 export type BuildConfigLibrary = {
+  /**
+   * Whether to build the package as an ES module.
+   */
+  esm?: boolean
   mode: 'library'
 }
 

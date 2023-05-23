@@ -12,13 +12,13 @@ import { findAllFiles } from './helpers'
  */
 export const library = async (
   packageDir: string,
-  _config: BuildConfigLibrary,
+  config: BuildConfigLibrary,
   { name }: TwiConfig
 ) => {
   const result = await esbuild.build({
     bundle: false,
     entryPoints: findAllFiles(path.join(packageDir, 'src')),
-    format: 'cjs',
+    format: config.esm ? 'esm' : 'cjs',
     metafile: true,
     minify: true,
     outdir: './lib',
