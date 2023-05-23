@@ -1,5 +1,5 @@
-import { ScopedPackagesOptions } from 'projen/lib/javascript'
-import { TypeScriptProject } from 'projen/lib/typescript'
+import { ScopedPackagesOptions } from 'projen/lib/javascript/index.js'
+import { TypeScriptProject } from 'projen/lib/typescript/index.js'
 
 export type TwinDigitalTypeScriptOptions = {
   additionalScopedPackages?: ScopedPackagesOptions[]

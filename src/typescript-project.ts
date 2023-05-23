@@ -1,15 +1,15 @@
 import {
   TypeScriptProject,
   TypeScriptProjectOptions,
-} from 'projen/lib/typescript'
+} from 'projen/lib/typescript/index.js'
 import {
   DefaultCompilerOptions,
   DefaultPrettierOptions,
   DEFAULTS,
-} from './constants'
-import { addReferences, updateTypescriptConfig } from './monorepo'
-import { TwinDigitalTypeScriptOptions } from './typescript-options'
-import { TypeScriptModuleResolution } from 'projen/lib/javascript'
+} from './constants.js'
+import { addReferences, updateTypescriptConfig } from './monorepo.js'
+import { TwinDigitalTypeScriptOptions } from './typescript-options.js'
+import { TypeScriptModuleResolution } from 'projen/lib/javascript/index.js'
 
 export type TwinDigitalTypescriptProjectOptions = Omit<
   TypeScriptProjectOptions,

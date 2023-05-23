@@ -1,16 +1,16 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { awscdk, Component } from 'projen'
-import { AwsCdkTypeScriptApp } from 'projen/lib/awscdk'
+import { AwsCdkTypeScriptApp } from 'projen/lib/awscdk/index.js'
 
-import { AwsCdkPipeline } from './aws-cdk-pipeline'
+import { AwsCdkPipeline } from './aws-cdk-pipeline.js'
 import {
   DefaultCompilerOptions,
   DefaultPrettierOptions,
   DEFAULTS,
-} from './constants'
-import { addReferences, updateTypescriptConfig } from './monorepo'
-import { TwinDigitalTypeScriptOptions } from './typescript-options'
+} from './constants.js'
+import { addReferences, updateTypescriptConfig } from './monorepo.js'
+import { TwinDigitalTypeScriptOptions } from './typescript-options.js'
 import { TypeScriptModuleResolution } from 'projen/lib/javascript'
 
 export type TwinDigitalCdkAppOptions = Omit<

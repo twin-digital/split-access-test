@@ -1,6 +1,6 @@
 import path from 'node:path'
-import { get, isEmpty } from 'lodash'
-import { TypeScriptProject } from 'projen/lib/typescript'
+import { get, isEmpty } from 'lodash-es'
+import { TypeScriptProject } from 'projen/lib/typescript/index.js'
 
 const tsconfigOverride = (
   project: TypeScriptProject,

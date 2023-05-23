@@ -3,14 +3,15 @@
   "version": "0.3.2",
   "description": "custom projen components and project types",
   "license": "MIT",
+  "type": "module",
   "main": "lib/index.js",
   "dependencies": {
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "projen": "^0.71.7"
   },
   "devDependencies": {
     "@types/jest": "29.x",
-    "@types/lodash": "4.x",
+    "@types/lodash-es": "4.x",
     "@types/node": "16.x",
     "@types/uuid": "9.x",
     "jest": "29.",

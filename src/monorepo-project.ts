@@ -1,9 +1,9 @@
 import path from 'node:path'
-import { NodePackage, NodeProject } from 'projen/lib/javascript'
+import { NodePackage, NodeProject } from 'projen/lib/javascript/index.js'
 import {
   TwinDigitalTypescriptProject,
   TwinDigitalTypescriptProjectOptions,
-} from './typescript-project'
+} from './typescript-project.js'
 
 function isTruthy(value: string | undefined): boolean {
   return !(
