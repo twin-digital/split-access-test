@@ -11,7 +11,7 @@ import {
 } from './constants.js'
 import { addReferences, updateTypescriptConfig } from './monorepo.js'
 import { TwinDigitalTypeScriptOptions } from './typescript-options.js'
-import { TypeScriptModuleResolution } from 'projen/lib/javascript'
+import { TypeScriptModuleResolution } from 'projen/lib/javascript/index.js'
 
 export type TwinDigitalCdkAppOptions = Omit<
   awscdk.AwsCdkTypeScriptAppOptions,
