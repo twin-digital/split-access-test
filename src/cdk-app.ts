@@ -80,17 +80,6 @@ export class TwinDigitalCdkApp extends awscdk.AwsCdkTypeScriptApp {
     if (esModule) {
       // set package type
       this.package.addField('type', 'module')
-
-      const tsconfig = this.tsconfig?.fileName ?? this.tsconfigDev.fileName
-
-      // add "--esm" flag to cdk command
-      this.cdkConfig.json.addOverride(
-        'app',
-        `npx ts-node --esm -P ${tsconfig} --prefer-ts-exts ${path.posix.join(
-          this.srcdir,
-          this.appEntrypoint
-        )}`
-      )
     }
 
     updateTypescriptConfig(this)

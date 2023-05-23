@@ -71,6 +71,13 @@ export class TwinDigitalTypescriptProject extends TypeScriptProject {
 
     if (esModule) {
       this.package.addField('type', 'module')
+
+      this.tsconfig?.file?.addOverride?.('ts-node', {
+        esm: true,
+      })
+      this.tsconfigDev.file.addOverride('ts-node', {
+        esm: true,
+      })
     }
 
     updateTypescriptConfig(this)
