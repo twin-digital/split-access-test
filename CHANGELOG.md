@@ -1,5 +1,11 @@
 # @twin-digital/projen
 
+## 0.3.1
+
+### Patch Changes
+
+- 7b3ce9a: Fixed error preventing MonorepoProject from being imported.
+
 ## 0.3.0
 
 ### Minor Changes
