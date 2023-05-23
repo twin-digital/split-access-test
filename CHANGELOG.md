@@ -1,5 +1,11 @@
 # @twin-digital/projen
 
+## 0.4.3
+
+### Patch Changes
+
+- ff469c1: Added "ts-node.esm: true" to cdk projects which are es modules.
+
 ## 0.4.2
 
 ### Patch Changes
